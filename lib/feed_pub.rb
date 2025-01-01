@@ -1,8 +1,11 @@
 # frozen_string_literal: true
 
-require_relative "feed_pub/version"
+require 'capybara'
+require 'active_support/all'
+require 'http'
 
 module FeedPub
-  class Error < StandardError; end
-  # Your code goes here...
 end
+
+require_relative "feed_pub/run"
+require_relative "feed_pub/version"

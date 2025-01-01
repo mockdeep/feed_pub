@@ -1,0 +1,5 @@
+#!/usr/bin/env ruby
+
+require_relative "../lib/feed_pub"
+
+FeedPub::Run.call(ARGV[0])
