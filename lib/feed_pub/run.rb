@@ -14,7 +14,10 @@ module FeedPub::Run
 
       # need to number the images in case they don't have sequenced names
       sequence = "00000"
-      download_image(session.find(image_selector)["src"], sequence:)
+      session.all(image_selector).each do |img|
+        download_image(img["src"], sequence:)
+        sequence = sequence.next
+      end
 
       while session.has_css?(next_selector) && Integer(sequence, 10) < max_pages
         current_url = session.current_url
@@ -27,10 +30,10 @@ module FeedPub::Run
           break
         end
 
-        sequence = sequence.next
-        # break if sequence > "00010" # for testing purposes
-
-        download_image(session.find(image_selector)["src"], sequence:)
+        session.all(image_selector).each do |img|
+          download_image(img["src"], sequence:)
+          sequence = sequence.next
+        end
       end
 
       # merge images into a single PDF
