@@ -6,12 +6,11 @@ module FeedPub::Run
     DEFAULT_MAX_PAGES = 200
 
     def call(url, max_pages: DEFAULT_MAX_PAGES)
-      next_selector = ".next-button"
-
       session = Capybara::Session.new(:selenium)
       session.visit(url)
       image_selector = infer_image_selector(session)
-      puts "Image selector: '#{image_selector}'"
+      next_selector = infer_next_selector(session)
+      puts "Image selector: '#{image_selector}', Next selector: '#{next_selector}'"
       user_agent = session.evaluate_script('navigator.userAgent')
       headers = { "User-Agent" => user_agent }
 
@@ -21,7 +20,7 @@ module FeedPub::Run
 
       while session.has_css?(next_selector) && Integer(sequence, 10) < max_pages
         current_url = session.current_url
-        session.find(next_selector).click
+        session.first(next_selector).click
 
         begin
           session.assert_no_current_path(current_url)
@@ -60,7 +59,28 @@ module FeedPub::Run
 
       raise "No image candidates found" unless element
 
-      element["id"].present? ? "##{element['id']} img" : ".#{element['class']} img"
+      if element['id'].present?
+        "[id='#{element['id']}'] img"
+      else
+        "[class='#{element['class']}'] img"
+      end
+    end
+
+    def infer_next_selector(session)
+      # find all elements with "next" in id or class or alt
+      # return the selector from the first one
+      selector = "[id*='next'i], [class*='next'i], [alt*='next'i]"
+      element = session.all(selector).first
+
+      raise "No next candidates found" unless element
+
+      if element['id'].present?
+        "[id='#{element['id']}']"
+      elsif element['class'].present?
+        "[class='#{element['class']}']"
+      else
+        "[alt='#{element['alt']}']"
+      end
     end
 
     def download_image(image_url, sequence:, headers:)
