@@ -3,7 +3,9 @@
 module FeedPub::Run
   class << self
     PROCESSED_URLS = "downloaded_images.txt"
-    def call(url)
+    DEFAULT_MAX_PAGES = 200
+
+    def call(url, max_pages: DEFAULT_MAX_PAGES)
       image_selector = ".comic-page > img"
       next_selector = ".next-button"
 
@@ -11,10 +13,10 @@ module FeedPub::Run
       session.visit(url)
 
       # need to number the images in case they don't have sequenced names
-      sequence = "00001"
+      sequence = "00000"
       download_image(session.find(image_selector)["src"], sequence:)
 
-      while session.has_css?(next_selector)
+      while session.has_css?(next_selector) && Integer(sequence, 10) < max_pages
         current_url = session.current_url
         session.find(next_selector).click
 
