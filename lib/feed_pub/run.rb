@@ -36,8 +36,9 @@ module FeedPub::Run
         end
       end
 
-      # merge images into a single PDF
-      `convert *.jpg comic.pdf`
+      File.rm(PROCESSED_URLS)
+      # merge all images (png, jpg, etc.) into a single PDF
+      `convert * comic.pdf`
       # `convert comic.pdf -fill white -colorize 20% comic_light.pdf`
       # `convert -brightness-contrast 20x20 comic.pdf comic_bright.pdf`
       # `pdftoppm -png -gray some.pdf some`
