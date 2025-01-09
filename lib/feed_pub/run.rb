@@ -6,13 +6,14 @@ module FeedPub::Run
     DEFAULT_MAX_PAGES = 200
 
     def call(url, max_pages: DEFAULT_MAX_PAGES)
-      image_selector = ".comic-page > img"
       next_selector = ".next-button"
 
       session = Capybara::Session.new(:selenium)
+      session.visit(url)
+      image_selector = infer_image_selector(session)
+      puts "Image selector: '#{image_selector}'"
       user_agent = session.evaluate_script('navigator.userAgent')
       headers = { "User-Agent" => user_agent }
-      session.visit(url)
 
       # need to number the images in case they don't have sequenced names
       sequence = "00000"
@@ -44,6 +45,24 @@ module FeedPub::Run
 
     private
 
+    def infer_image_selector(session)
+      # find all elements on the page with "comic" in id or class
+      # then find the ones with no children matching the same criteria
+      # then find the one with the biggest image
+      selector = "[id*='comic'i], [class*='comic'i]"
+      candidates = session.all(selector).select do |element|
+        element.has_no_css?(selector) && element.has_css?("img")
+      end
+
+      element = candidates.max_by do |candidate|
+        candidate.all("img").map { |img| Integer(img["width"]) }.max
+      end
+
+      raise "No image candidates found" unless element
+
+      element["id"].present? ? "##{element['id']} img" : ".#{element['class']} img"
+    end
+
     def download_image(image_url, sequence:, headers:)
       return if processed_urls.include?(image_url)
 
@@ -53,7 +72,7 @@ module FeedPub::Run
       # if they do, we'll need to adjust our algorithm
       raise "File already exists: #{filename}" if File.exist?(filename)
 
-      response = HTTP.get(image_url, headers:)
+      response = HTTP.follow.get(image_url, headers:)
 
       File.write(filename, response.body)
       File.write(PROCESSED_URLS, "#{image_url}\n", mode: "a")
