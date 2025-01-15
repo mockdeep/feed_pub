@@ -10,7 +10,6 @@ module FeedPub::Run
       session.visit(url)
       image_selector = infer_image_selector(session)
       next_selector = infer_next_selector(session)
-      puts "Image selector: '#{image_selector}', Next selector: '#{next_selector}'"
 
       # need to number the images in case they don't have sequenced names
       sequence = "00000"
@@ -21,10 +20,12 @@ module FeedPub::Run
 
       while session.has_css?(next_selector) && Integer(sequence, 10) < max_pages
         current_url = session.current_url
+        puts "current url: #{current_url}"
         session.first(next_selector).click
 
         begin
           session.assert_no_current_path(current_url)
+          puts "new current url: #{current_url}"
         rescue Capybara::ExpectationNotMet
           puts "URL did not change, stopping"
           break
@@ -36,17 +37,19 @@ module FeedPub::Run
         end
       end
 
-      File.rm(PROCESSED_URLS)
+      File.delete(PROCESSED_URLS)
       # merge all images (png, jpg, etc.) into a single PDF
       `convert * comic.pdf`
       # `convert comic.pdf -fill white -colorize 20% comic_light.pdf`
       # `convert -brightness-contrast 20x20 comic.pdf comic_bright.pdf`
       # `pdftoppm -png -gray some.pdf some`
+      puts "done"
     end
 
     private
 
     def infer_image_selector(session)
+      puts "inferring image selector"
       # find all elements on the page with "comic" in id or class
       # then find the ones with no children matching the same criteria
       # then find the one with the biggest image
@@ -61,14 +64,20 @@ module FeedPub::Run
 
       raise "No image candidates found" unless element
 
-      if element['id'].present?
-        "[id='#{element['id']}'] img"
-      else
-        "[class='#{element['class']}'] img"
-      end
+      final_selector =
+        if element['id'].present?
+          "[id='#{element['id']}'] img"
+        else
+          "[class='#{element['class']}'] img"
+        end
+
+      puts "final image selector: '#{final_selector}'"
+
+      final_selector
     end
 
     def infer_next_selector(session)
+      puts "inferring next selector"
       # find all elements with "next" in id or class or alt
       # return the selector from the first one
       selector = "[id*='next'i], [class*='next'i], [alt*='next'i]"
@@ -76,17 +85,27 @@ module FeedPub::Run
 
       raise "No next candidates found" unless element
 
-      if element['id'].present?
-        "[id='#{element['id']}']"
-      elsif element['class'].present?
-        "[class='#{element['class']}']"
-      else
-        "[alt='#{element['alt']}']"
-      end
+      final_selector =
+        if element['id'].present?
+          "[id='#{element['id']}']"
+        elsif element['alt'].present?
+          "[alt='#{element['alt']}']"
+        else
+          "[class='#{element['class']}']"
+        end
+
+      puts "final next selector: '#{final_selector}'"
+
+      final_selector
     end
 
     def download_image(image_url, sequence:)
-      return if processed_urls.include?(image_url)
+      if processed_urls.include?(image_url)
+        puts "already downloaded: #{image_url}"
+        return
+      end
+
+      puts "downloading: #{image_url.inspect}"
 
       filename = "#{sequence}_#{File.basename(image_url)}"
 
