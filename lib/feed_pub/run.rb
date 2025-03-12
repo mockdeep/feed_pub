@@ -17,10 +17,10 @@ module FeedPub::Run
         sequence = download_image(img["src"], referer: url, sequence:)
       end
 
-      while session.has_css?(next_selector) && Integer(sequence, 10) < max_pages
+      while next_selector.matches?(session) && Integer(sequence, 10) < max_pages
         current_url = session.current_url
         puts "current url: #{current_url}"
-        session.first(next_selector).click
+        next_selector.click(session)
 
         begin
           session.assert_no_current_path(current_url)
@@ -74,6 +74,20 @@ module FeedPub::Run
       final_selector
     end
 
+    class Selector
+      def initialize(selector)
+        @selector = selector
+      end
+
+      def matches?(session)
+        session.has_css?(@selector)
+      end
+
+      def click(session)
+        session.find(@selector).click
+      end
+    end
+
     def infer_next_selector(session)
       puts "inferring next selector"
       # find all elements with "next" in id or class or alt
@@ -85,11 +99,11 @@ module FeedPub::Run
 
       final_selector =
         if element['id'].present?
-          "[id='#{element['id']}']"
+          Selector.new("[id='#{element['id']}']")
         elsif element['alt'].present?
-          "[alt='#{element['alt']}']"
+          Selector.new("[alt='#{element['alt']}']")
         else
-          "[class='#{element['class']}']"
+          Selector.new("[class='#{element['class']}']")
         end
 
       puts "final next selector: '#{final_selector}'"
