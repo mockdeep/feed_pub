@@ -29,5 +29,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_dependency("activesupport", "~> 8.0")
+  spec.add_dependency("capybara", "~> 3.40")
   spec.add_dependency("http", "~> 5.2")
+  spec.add_dependency("selenium-webdriver", "~> 4.29.1")
 end
