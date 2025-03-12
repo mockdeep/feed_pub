@@ -52,21 +52,23 @@ module FeedPub::Run
       # then find the ones with no children matching the same criteria
       # then find the one with the biggest image
       selector = "[id*='comic'i], [class*='comic'i], .viewer_img"
-      candidates = session.all(selector).select do |element|
-        element.has_no_css?(selector) && element.has_css?("img")
-      end
+      candidates =
+        session.all(selector).select do |element|
+          element.has_no_css?(selector) && element.has_css?("img")
+        end
 
-      element = candidates.max_by do |candidate|
-        candidate.all("img").map { |img| Integer(img["width"]) }.max
-      end
+      element =
+        candidates.max_by do |candidate|
+          candidate.all("img").map { |img| Integer(img["width"]) }.max
+        end
 
       raise "No image candidates found" unless element
 
       final_selector =
-        if element['id'].present?
-          "[id='#{element['id']}'] img"
+        if element["id"].present?
+          "[id='#{element["id"]}'] img"
         else
-          "[class='#{element['class']}'] img"
+          "[class='#{element["class"]}'] img"
         end
 
       puts "final image selector: '#{final_selector}'"
@@ -98,12 +100,12 @@ module FeedPub::Run
       raise "No next candidates found" unless element
 
       final_selector =
-        if element['id'].present?
-          Selector.new("[id='#{element['id']}']")
-        elsif element['alt'].present?
-          Selector.new("[alt='#{element['alt']}']")
+        if element["id"].present?
+          Selector.new("[id='#{element["id"]}']")
+        elsif element["alt"].present?
+          Selector.new("[alt='#{element["alt"]}']")
         else
-          Selector.new("[class='#{element['class']}']")
+          Selector.new("[class='#{element["class"]}']")
         end
 
       puts "final next selector: '#{final_selector}'"
@@ -125,7 +127,7 @@ module FeedPub::Run
       # if they do, we'll need to adjust our algorithm
       raise "File already exists: #{filename}" if File.exist?(filename)
 
-      response = HTTP.follow.get(image_url, headers: { "Referer" => referer })
+      response = HTTP.follow.get(image_url, headers: { Referer: referer })
 
       File.write(filename, response.body)
       File.write(PROCESSED_URLS, "#{image_url}\n", mode: "a")
