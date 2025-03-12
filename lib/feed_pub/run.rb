@@ -14,8 +14,7 @@ module FeedPub::Run
       # need to number the images in case they don't have sequenced names
       sequence = "00000"
       session.all(image_selector).each do |img|
-        download_image(img["src"], sequence:)
-        sequence = sequence.next
+        sequence = download_image(img["src"], referer: url, sequence:)
       end
 
       while session.has_css?(next_selector) && Integer(sequence, 10) < max_pages
@@ -32,8 +31,7 @@ module FeedPub::Run
         end
 
         session.all(image_selector).each do |img|
-          download_image(img["src"], sequence:)
-          sequence = sequence.next
+          sequence = download_image(img["src"], referer: url, sequence:)
         end
       end
 
@@ -53,7 +51,7 @@ module FeedPub::Run
       # find all elements on the page with "comic" in id or class
       # then find the ones with no children matching the same criteria
       # then find the one with the biggest image
-      selector = "[id*='comic'i], [class*='comic'i]"
+      selector = "[id*='comic'i], [class*='comic'i], .viewer_img"
       candidates = session.all(selector).select do |element|
         element.has_no_css?(selector) && element.has_css?("img")
       end
@@ -99,10 +97,10 @@ module FeedPub::Run
       final_selector
     end
 
-    def download_image(image_url, sequence:)
+    def download_image(image_url, referer:, sequence:)
       if processed_urls.include?(image_url)
         puts "already downloaded: #{image_url}"
-        return
+        return sequence
       end
 
       puts "downloading: #{image_url.inspect}"
@@ -113,10 +111,11 @@ module FeedPub::Run
       # if they do, we'll need to adjust our algorithm
       raise "File already exists: #{filename}" if File.exist?(filename)
 
-      response = HTTP.follow.get(image_url)
+      response = HTTP.follow.get(image_url, headers: { "Referer" => referer })
 
       File.write(filename, response.body)
       File.write(PROCESSED_URLS, "#{image_url}\n", mode: "a")
+      sequence.next
     end
 
     def processed_urls
