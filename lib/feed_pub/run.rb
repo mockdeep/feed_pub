@@ -14,7 +14,7 @@ module FeedPub::Run
       # need to number the images in case they don't have sequenced names
       sequence = "00000"
       session.all(image_selector).each do |img|
-        sequence = download_image(img["src"], referer: url, sequence:)
+        sequence = download_image(img, referer: url, sequence:)
       end
 
       while next_selector.matches?(session) && Integer(sequence, 10) < max_pages
@@ -31,7 +31,7 @@ module FeedPub::Run
         end
 
         session.all(image_selector).each do |img|
-          sequence = download_image(img["src"], referer: url, sequence:)
+          sequence = download_image(img, referer: url, sequence:)
         end
       end
 
@@ -76,7 +76,8 @@ module FeedPub::Run
       final_selector
     end
 
-    def download_image(image_url, referer:, sequence:)
+    def download_image(img, referer:, sequence:)
+      image_url = img["data-url"] || img["src"]
       if processed_urls.include?(image_url)
         puts "already downloaded: #{image_url}"
         return sequence
