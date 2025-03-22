@@ -2,14 +2,14 @@ module FeedPub::InferNextSelector
   class << self
     def call(session)
       puts "inferring next selector"
+      if session.has_link?("Next")
+        return LinkSelector.new("Next")
+      end
+
       # find all elements with "next" in id or class or alt
       # return the selector from the first one
       selector = "[id*='next'i], [class*='next'i], [alt*='next'i]"
       element = session.all(selector).first
-
-      if element.nil? && session.has_link?("Next")
-        return LinkSelector.new("Next")
-      end
 
       raise "No next candidates found" unless element
 
@@ -48,11 +48,11 @@ module FeedPub::InferNextSelector
     end
 
     def matches?(session)
-      session.has_link?(@text)
+      session.has_link?(@text, visible: false)
     end
 
     def click(session)
-      session.click_link(@text)
+      session.visit(session.find_link(@text, visible: false, match: :first)[:href])
     end
   end
 

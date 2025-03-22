@@ -3,7 +3,7 @@
 module FeedPub::Run
   class << self
     PROCESSED_URLS = "downloaded_images.txt"
-    DEFAULT_MAX_PAGES = 50
+    DEFAULT_MAX_PAGES = 100
 
     def call(url, max_pages: DEFAULT_MAX_PAGES)
       session = Capybara::Session.new(:selenium)
