@@ -51,7 +51,7 @@ module FeedPub::Run
       # find all elements on the page with "comic" in id or class
       # then find the ones with no children matching the same criteria
       # then find the one with the biggest image
-      selector = "[id*='comic'i], [class*='comic'i], .viewer_img"
+      selector = "[id*='comic'], [class*='comic'], .viewer_img"
       candidates =
         session.all(selector).select do |element|
           element.has_no_css?(selector) && element.has_css?("img")
