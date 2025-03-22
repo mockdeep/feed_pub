@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative "support/coverage"
+require_relative "support/test_session"
 require_relative "support/webmock"
 
 require_relative "../lib/feed_pub"
