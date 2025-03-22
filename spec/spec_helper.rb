@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
-require "feed_pub"
+require_relative "support/coverage"
+
+require_relative "../lib/feed_pub"
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
