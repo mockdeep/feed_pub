@@ -129,4 +129,17 @@ RSpec.describe FeedPub::Run do
 
     described_class.call("some_url")
   end
+
+  it "raises an error when image file already exists" do
+    session = stub_session
+    stub_request(:get, "https://foo.png").to_return(body: "image data")
+    element = Capybara.string("<img width='300' src='https://foo.png'></img>")
+    image_selector = "[class=''] img"
+    allow(session).to receive(:all).and_return([element])
+    allow(session).to receive(:all).with(image_selector).and_return([element.find("img")])
+    allow(File).to receive(:exist?).with("downloaded_images.txt").and_return(false)
+    allow(File).to receive(:exist?).with("00000_foo.png").and_return(true)
+    expect { described_class.call("some_url") }
+      .to raise_error("File already exists: 00000_foo.png")
+  end
 end
