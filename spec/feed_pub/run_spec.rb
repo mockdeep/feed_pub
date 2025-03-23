@@ -111,4 +111,22 @@ RSpec.describe FeedPub::Run do
 
     described_class.call("some_url")
   end
+
+  it "does not download images when already downloaded" do
+    expect(File).to receive(:exist?).with("downloaded_images.txt").and_return(true)
+    expect(File).to receive(:read).with("downloaded_images.txt").and_return("https://foo.png\n")
+
+    session = stub_session
+    stub_request(:get, "https://foo.png").to_return(body: "image data")
+    element = Capybara.string("<div id='some_id'><img width='300' src='https://foo.png'></img></div>")
+    image_selector = "[id='some_id'] img"
+    allow(session).to receive(:all).and_return([element.find("div")])
+    allow(session).to receive(:all).with(image_selector).and_return([element.find("img")])
+    expect(File).not_to receive(:write)
+    expect(File).not_to receive(:write)
+    expect(File).to receive(:delete).with("downloaded_images.txt")
+    expect(described_class).to receive(:`).with("convert * comic.pdf")
+
+    described_class.call("some_url")
+  end
 end
