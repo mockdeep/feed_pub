@@ -92,4 +92,23 @@ RSpec.describe FeedPub::Run do
 
     described_class.call("some_url")
   end
+
+  it "uses an id as selector when present" do
+    session = stub_session
+    stub_request(:get, "https://foo.png").to_return(body: "image data")
+    element = Capybara.string("<div id='some_id'><img width='300' src='https://foo.png'></img></div>")
+    image_selector = "[id='some_id'] img"
+    allow(session).to receive(:all).and_return([element.find("div")])
+    allow(session).to receive(:all).with(image_selector).and_return([element.find("img")])
+    expect(File).to receive(:write).with("00000_foo.png", "image data")
+    expect(File).to receive(:write).with(
+      "downloaded_images.txt",
+      "https://foo.png\n",
+      mode: "a",
+    )
+    expect(File).to receive(:delete).with("downloaded_images.txt")
+    expect(described_class).to receive(:`).with("convert * comic.pdf")
+
+    described_class.call("some_url")
+  end
 end
