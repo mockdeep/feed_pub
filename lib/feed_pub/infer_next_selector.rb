@@ -40,6 +40,10 @@ module FeedPub::InferNextSelector
     def click(session)
       session.find(@selector).click
     end
+
+    def to_s
+      @selector
+    end
   end
 
   class LinkSelector

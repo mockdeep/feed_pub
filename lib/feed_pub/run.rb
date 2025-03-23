@@ -93,7 +93,7 @@ module FeedPub::Run
 
       response = HTTP.follow.get(image_url, headers: { Referer: referer })
 
-      File.write(filename, response.body)
+      File.write(filename, response.body.to_s)
       File.write(PROCESSED_URLS, "#{image_url}\n", mode: "a")
       sequence.next
     end
