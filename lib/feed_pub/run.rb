@@ -5,33 +5,33 @@ module FeedPub::Run
     PROCESSED_URLS = "downloaded_images.txt"
     DEFAULT_MAX_PAGES = 100
 
-    def call(url, max_pages: DEFAULT_MAX_PAGES)
+    def call(url, output:, max_pages: DEFAULT_MAX_PAGES)
       session = Capybara::Session.new(:selenium)
       session.visit(url)
-      image_selector = infer_image_selector(session)
-      next_selector = FeedPub::InferNextSelector.call(session)
+      image_selector = infer_image_selector(session, output:)
+      next_selector = FeedPub::InferNextSelector.call(session, output:)
 
       # need to number the images in case they don't have sequenced names
       sequence = "00000"
       session.all(image_selector).each do |img|
-        sequence = download_image(img, referer: url, sequence:)
+        sequence = download_image(img, referer: url, sequence:, output:)
       end
 
       while next_selector.matches?(session) && Integer(sequence, 10) < max_pages
         current_url = session.current_url
-        puts "current url: #{current_url}"
+        output.puts "current url: #{current_url}"
         next_selector.click(session)
 
         begin
           session.assert_no_current_path(current_url)
-          puts "new current url: #{current_url}"
+          output.puts "new current url: #{current_url}"
         rescue Capybara::ExpectationNotMet
-          puts "URL did not change, stopping"
+          output.puts "URL did not change, stopping"
           break
         end
 
         session.all(image_selector).each do |img|
-          sequence = download_image(img, referer: url, sequence:)
+          sequence = download_image(img, referer: url, sequence:, output:)
         end
       end
 
@@ -41,13 +41,13 @@ module FeedPub::Run
       # `convert comic.pdf -fill white -colorize 20% comic_light.pdf`
       # `convert -brightness-contrast 20x20 comic.pdf comic_bright.pdf`
       # `pdftoppm -png -gray some.pdf some`
-      puts "done"
+      output.puts "done"
     end
 
     private
 
-    def infer_image_selector(session)
-      puts "inferring image selector"
+    def infer_image_selector(session, output:)
+      output.puts "inferring image selector"
       # find all elements on the page with "comic" in id or class
       # then find the ones with no children matching the same criteria
       # then find the one with the biggest image
@@ -71,19 +71,19 @@ module FeedPub::Run
           "[class='#{element["class"]}'] img"
         end
 
-      puts "final image selector: '#{final_selector}'"
+      output.puts "final image selector: '#{final_selector}'"
 
       final_selector
     end
 
-    def download_image(img, referer:, sequence:)
+    def download_image(img, referer:, sequence:, output:)
       image_url = img["data-url"] || img["src"]
       if processed_urls.include?(image_url)
-        puts "already downloaded: #{image_url}"
+        output.puts "already downloaded: #{image_url}"
         return sequence
       end
 
-      puts "downloading: #{image_url.inspect}"
+      output.puts "downloading: #{image_url.inspect}"
 
       filename = "#{sequence}_#{File.basename(image_url)}"
 

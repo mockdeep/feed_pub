@@ -1,7 +1,7 @@
 module FeedPub::InferNextSelector
   class << self
-    def call(session)
-      puts "inferring next selector"
+    def call(session, output:)
+      output.puts "inferring next selector"
       if session.has_link?("Next")
         return LinkSelector.new("Next")
       end
@@ -22,7 +22,7 @@ module FeedPub::InferNextSelector
           Selector.new("[class='#{element["class"]}']")
         end
 
-      puts "final next selector: '#{final_selector}'"
+      output.puts "final next selector: '#{final_selector}'"
 
       final_selector
     end
