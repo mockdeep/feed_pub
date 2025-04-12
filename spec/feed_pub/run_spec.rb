@@ -10,7 +10,7 @@ RSpec.describe FeedPub::Run do
   it "raises an error when no images are found" do
     stub_session
 
-    expect { described_class.call("some_url") }
+    expect { described_class.call("some_url", output: StringIO.new) }
       .to raise_error("No image candidates found")
   end
 
@@ -19,7 +19,7 @@ RSpec.describe FeedPub::Run do
     element = Capybara.string("<img width='300'></img>")
     allow(session).to receive(:all).and_return([element], [])
 
-    expect { described_class.call("some_url") }
+    expect { described_class.call("some_url", output: StringIO.new) }
       .to raise_error("No next candidates found")
   end
 
@@ -39,7 +39,7 @@ RSpec.describe FeedPub::Run do
     expect(File).to receive(:delete).with("downloaded_images.txt")
     expect(described_class).to receive(:`).with("convert * comic.pdf")
 
-    described_class.call("some_url")
+    described_class.call("some_url", output: StringIO.new)
   end
 
   it "clicks the next link and downloads images from each page" do
@@ -65,7 +65,7 @@ RSpec.describe FeedPub::Run do
     expect(File).to receive(:delete).with("downloaded_images.txt")
     expect(described_class).to receive(:`).with("convert * comic.pdf")
 
-    described_class.call("some_url")
+    described_class.call("some_url", output: StringIO.new)
   end
 
   it "stops when clicking the next link does not change page" do
@@ -90,7 +90,7 @@ RSpec.describe FeedPub::Run do
     expect(File).to receive(:delete).with("downloaded_images.txt")
     expect(described_class).to receive(:`).with("convert * comic.pdf")
 
-    described_class.call("some_url")
+    described_class.call("some_url", output: StringIO.new)
   end
 
   it "uses an id as selector when present" do
@@ -109,7 +109,7 @@ RSpec.describe FeedPub::Run do
     expect(File).to receive(:delete).with("downloaded_images.txt")
     expect(described_class).to receive(:`).with("convert * comic.pdf")
 
-    described_class.call("some_url")
+    described_class.call("some_url", output: StringIO.new)
   end
 
   it "does not download images when already downloaded" do
@@ -127,7 +127,7 @@ RSpec.describe FeedPub::Run do
     expect(File).to receive(:delete).with("downloaded_images.txt")
     expect(described_class).to receive(:`).with("convert * comic.pdf")
 
-    described_class.call("some_url")
+    described_class.call("some_url", output: StringIO.new)
   end
 
   it "raises an error when image file already exists" do
@@ -139,7 +139,7 @@ RSpec.describe FeedPub::Run do
     allow(session).to receive(:all).with(image_selector).and_return([element.find("img")])
     allow(File).to receive(:exist?).with("downloaded_images.txt").and_return(false)
     allow(File).to receive(:exist?).with("00000_foo.png").and_return(true)
-    expect { described_class.call("some_url") }
+    expect { described_class.call("some_url", output: StringIO.new) }
       .to raise_error("File already exists: 00000_foo.png")
   end
 end

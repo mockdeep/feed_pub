@@ -5,7 +5,7 @@ RSpec.describe FeedPub::InferNextSelector do
     session = TestSession.new
     expect(session).to receive(:has_link?).with("Next").and_return(true)
 
-    expect(described_class.call(session)).to be_a(FeedPub::InferNextSelector::LinkSelector)
+    expect(described_class.call(session, output: StringIO.new)).to be_a(FeedPub::InferNextSelector::LinkSelector)
   end
 
   it "returns an alt selector when an element with 'next' in alt is found" do
@@ -13,7 +13,7 @@ RSpec.describe FeedPub::InferNextSelector do
     element = Capybara.string("<button alt='next'></button>").find("button")
     allow(session).to receive(:all).and_return([element])
 
-    selector = described_class.call(session)
+    selector = described_class.call(session, output: StringIO.new)
 
     expect(selector.to_s).to eq("[alt='next']")
   end
