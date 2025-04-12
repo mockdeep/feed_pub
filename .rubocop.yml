@@ -9,6 +9,7 @@ AllCops:
   DefaultFormatter: fuubar
   TargetRubyVersion: 3.4
 
+Naming/VariableNumber: { EnforcedStyle: snake_case }
 Style/ClassAndModuleChildren: { EnforcedStyle: compact }
 
 Style/MethodCallWithArgsParentheses:
