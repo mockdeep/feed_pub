@@ -1,12 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe FeedPub::Run do
-  def stub_session
-    session = TestSession.new
-    allow(Capybara::Session).to receive(:new).and_return(session)
-    session
-  end
-
   def filepath
     File.join(Dir.pwd, "tmp")
   end
@@ -79,16 +73,11 @@ RSpec.describe FeedPub::Run do
   end
 
   it "raises an error when image file already exists" do
-    session = stub_session
     stub_request(:get, "https://foo.png").to_return(body: "image data")
-    element = Capybara.string("<img width='300' src='https://foo.png'></img>")
-    image_selector = "[class=''] img"
-    allow(session).to receive(:all).and_return([element])
-    allow(session).to receive(:all).with(image_selector).and_return([element.find("img")])
     allow(File).to receive(:exist?).with(processed_path).and_return(false)
     image_path = File.join(filepath, "00000_foo.png")
     allow(File).to receive(:exist?).with(image_path).and_return(true)
-    expect { described_class.call("some_url", output: StringIO.new, filepath:) }
+    expect { described_class.call("image_class", output: StringIO.new, filepath:) }
       .to raise_error("File already exists: 00000_foo.png")
   end
 end
