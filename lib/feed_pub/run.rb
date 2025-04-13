@@ -12,8 +12,12 @@ module FeedPub::Run
     end
 
     def call(url, output:, filepath:, max_pages: DEFAULT_MAX_PAGES)
+      Capybara.predicates_wait = false
       session = Capybara::Session.new(driver)
       session.visit(url)
+
+      raise "No images on page" unless session.has_css?("img", wait: 5)
+
       image_selector = infer_image_selector(session, output:)
       next_selector = FeedPub::InferNextSelector.call(session, output:)
       self.processed_urls = []
