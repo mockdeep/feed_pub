@@ -2,9 +2,9 @@
 
 module FeedPub::Run
   class << self
-    PROCESSED_URLS = "downloaded_images.txt"
     DEFAULT_MAX_PAGES = 100
 
+    attr_accessor :processed_urls
     attr_writer :driver
 
     def driver
@@ -16,6 +16,7 @@ module FeedPub::Run
       session.visit(url)
       image_selector = infer_image_selector(session, output:)
       next_selector = FeedPub::InferNextSelector.call(session, output:)
+      self.processed_urls = []
 
       # need to number the images in case they don't have sequenced names
       sequence = "00000"
@@ -43,8 +44,6 @@ module FeedPub::Run
         end
       end
 
-      processed_path = File.join(filepath, PROCESSED_URLS)
-      File.delete(processed_path)
       # merge all images (png, jpg, etc.) into a single PDF
       `convert * comic.pdf`
       # `convert comic.pdf -fill white -colorize 20% comic_light.pdf`
@@ -87,7 +86,7 @@ module FeedPub::Run
 
     def download_image(img, referer:, sequence:, output:, filepath:)
       image_url = img["data-url"] || img["src"]
-      if processed_urls(filepath:).include?(image_url)
+      if processed_urls.include?(image_url)
         output.puts "already downloaded: #{image_url}"
         return sequence
       end
@@ -105,15 +104,8 @@ module FeedPub::Run
 
       image_path = File.join(filepath, filename)
       File.write(image_path, response.body.to_s)
-      processed_path = File.join(filepath, PROCESSED_URLS)
-      File.write(processed_path, "#{image_url}\n", mode: "a")
+      processed_urls << image_url
       sequence.next
-    end
-
-    def processed_urls(filepath:)
-      processed_path = File.join(filepath, PROCESSED_URLS)
-
-      File.exist?(processed_path) ? File.read(processed_path).split("\n") : []
     end
   end
 end
