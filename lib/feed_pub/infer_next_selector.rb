@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module FeedPub::InferNextSelector
   class << self
     def call(session, output:)

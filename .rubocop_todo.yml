@@ -122,16 +122,6 @@ Style/DocumentationMethod:
     - 'lib/feed_pub/infer_next_selector.rb'
     - 'lib/feed_pub/run.rb'
 
-# Offense count: 2
-# This cop supports unsafe autocorrection (--autocorrect-all).
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: always, always_true, never
-Style/FrozenStringLiteralComment:
-  Exclude:
-    - '**/*.arb'
-    - 'exe/feed_pub'
-    - 'lib/feed_pub/infer_next_selector.rb'
-
 # Offense count: 1
 # This cop supports safe autocorrection (--autocorrect).
 Style/IfUnlessModifier:
