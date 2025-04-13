@@ -18,6 +18,16 @@ RSpec.describe FeedPub::InferNextSelector do
     expect(selector.to_s).to eq("[alt='next']")
   end
 
+  it "returns a class selector when an element with 'next' in class is found" do
+    session = TestSession.new
+    element = Capybara.string("<button class='next'></button>").find("button")
+    allow(session).to receive(:all).and_return([element])
+
+    selector = described_class.call(session, output: StringIO.new)
+
+    expect(selector.to_s).to eq("[class='next']")
+  end
+
   describe FeedPub::InferNextSelector::LinkSelector do
     describe "#matches?" do
       it "returns true when the link is found" do

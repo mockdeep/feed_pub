@@ -3,10 +3,6 @@
 class TestSession
   attr_accessor :url
 
-  def visit(url)
-    self.url = url
-  end
-
   def has_link?(_text)
     false
   end
