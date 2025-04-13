@@ -3,6 +3,7 @@
 require "active_support/all"
 require "capybara"
 require "http"
+require "rmagick"
 
 module FeedPub
 end

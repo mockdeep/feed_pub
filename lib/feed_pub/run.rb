@@ -45,7 +45,8 @@ module FeedPub::Run
       end
 
       # merge all images (png, jpg, etc.) into a single PDF
-      `convert * comic.pdf`
+      image_list = Magick::ImageList.new(*Dir.glob(File.join(filepath, "*")))
+      image_list.write(File.join(filepath, "comic.pdf"))
       # `convert comic.pdf -fill white -colorize 20% comic_light.pdf`
       # `convert -brightness-contrast 20x20 comic.pdf comic_bright.pdf`
       # `pdftoppm -png -gray some.pdf some`
