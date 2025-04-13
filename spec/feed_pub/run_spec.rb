@@ -20,8 +20,6 @@ RSpec.describe FeedPub::Run do
   end
 
   it "raises an error when no images are found" do
-    stub_session
-
     expect { described_class.call("some_url", output: StringIO.new, filepath:) }
       .to raise_error("No image candidates found")
   end

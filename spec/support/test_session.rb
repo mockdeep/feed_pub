@@ -7,10 +7,6 @@ class TestSession
     self.url = url
   end
 
-  def all(_selector)
-    []
-  end
-
   def has_css?(_selector)
     false
   end
