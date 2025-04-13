@@ -45,31 +45,26 @@ RSpec.describe FeedPub::Run do
   end
 
   it "clicks the next link and downloads images from each page" do
-    session = stub_session
-    allow(session).to receive(:has_css?).and_return(true, false)
     stub_request(:get, "https://foo.png").to_return(body: "image data")
-    element = Capybara.string("<img width='300' src='https://foo.png'></img>")
-    allow(element).to receive(:click)
-    allow(session).to receive(:find).and_return(element)
-    image_selector = "[class=''] img"
-    next_element = Capybara.string("<a href='next'></a>")
-    next_selector = "[class=''] a"
-    allow(session).to receive(:all).and_return([element], [next_element])
-    allow(session).to receive(:all).with(image_selector).and_return([element.find("img")])
-    allow(session).to receive(:all).with(next_selector).and_return([next_element])
+    stub_request(:get, "https://bar.png").to_return(body: "image data")
     image_path_1 = File.join(filepath, "00000_foo.png")
     expect(File).to receive(:write).with(image_path_1, "image data")
-    image_path_2 = File.join(filepath, "00001_foo.png")
+    image_path_2 = File.join(filepath, "00001_bar.png")
     expect(File).to receive(:write).with(image_path_2, "image data")
     expect(File).to receive(:write).with(
       processed_path,
       "https://foo.png\n",
       mode: "a",
-    ).twice
+    )
+    expect(File).to receive(:write).with(
+      processed_path,
+      "https://bar.png\n",
+      mode: "a",
+    )
     expect(File).to receive(:delete).with(processed_path)
     expect(described_class).to receive(:`).with("convert * comic.pdf")
 
-    described_class.call("some_url", output: StringIO.new, filepath:)
+    described_class.call("next_link", output: StringIO.new, filepath:)
   end
 
   it "stops when clicking the next link does not change page" do
