@@ -19,6 +19,11 @@ RSpec.describe FeedPub::Run do
 
   it "raises an error when no images are found" do
     expect { described_class.call("no_images", output: StringIO.new, filepath:) }
+      .to raise_error("No images on page")
+  end
+
+  it "raises an error when no image candidates are found" do
+    expect { described_class.call("no_matching_image", output: StringIO.new, filepath:) }
       .to raise_error("No image candidates found")
   end
 
