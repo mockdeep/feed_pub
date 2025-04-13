@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require 'capybara'
-require 'active_support/all'
-require 'http'
+require "capybara"
+require "active_support/all"
+require "http"
 
 module FeedPub
 end
