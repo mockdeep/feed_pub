@@ -30,12 +30,7 @@ RSpec.describe FeedPub::Run do
   end
 
   it "downloads images and creates a pdf" do
-    session = stub_session
     stub_request(:get, "https://foo.png").to_return(body: "image data")
-    element = Capybara.string("<img width='300' src='https://foo.png'></img>")
-    image_selector = "[class=''] img"
-    allow(session).to receive(:all).and_return([element])
-    allow(session).to receive(:all).with(image_selector).and_return([element.find("img")])
     image_path = File.join(filepath, "00000_foo.png")
     expect(File).to receive(:write).with(image_path, "image data")
     expect(File).to receive(:write).with(
@@ -46,7 +41,7 @@ RSpec.describe FeedPub::Run do
     expect(File).to receive(:delete).with(processed_path)
     expect(described_class).to receive(:`).with("convert * comic.pdf")
 
-    described_class.call("some_url", output: StringIO.new, filepath:)
+    described_class.call("one_image", output: StringIO.new, filepath:)
   end
 
   it "clicks the next link and downloads images from each page" do
