@@ -20,16 +20,12 @@ RSpec.describe FeedPub::Run do
   end
 
   it "raises an error when no images are found" do
-    expect { described_class.call("some_url", output: StringIO.new, filepath:) }
+    expect { described_class.call("no_images", output: StringIO.new, filepath:) }
       .to raise_error("No image candidates found")
   end
 
   it "raises an error when no next button is found" do
-    session = stub_session
-    element = Capybara.string("<img width='300'></img>")
-    allow(session).to receive(:all).and_return([element], [])
-
-    expect { described_class.call("some_url", output: StringIO.new, filepath:) }
+    expect { described_class.call("no_next", output: StringIO.new, filepath:) }
       .to raise_error("No next candidates found")
   end
 
