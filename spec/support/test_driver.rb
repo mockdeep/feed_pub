@@ -40,24 +40,45 @@ class TestDriver
 end
 
 class TestNode
+  attr_accessor :element
+
   def initialize(element)
-    @element = Capybara::Node::Simple.new(element)
+    self.element =
+      if element.is_a?(Capybara::Node::Simple)
+        element
+      else
+        Capybara::Node::Simple.new(element)
+      end
   end
 
   def click(*_args); end
 
   def find_css(selector)
-    @element.find_css(selector).map do |element|
+    element.find_css(selector).map do |element|
       TestNode.new(element)
     end
   end
 
+  def all(selector)
+    element.all(selector).map do |element|
+      TestNode.new(element)
+    end
+  end
+
+  def has_link?(text, **_options)
+    element.has_link?(text)
+  end
+
+  def find_link(text, **_options)
+    TestNode.new(element.find_link(text))
+  end
+
   def [](key)
-    @element[key]
+    element[key]
   end
 
   def visible?
-    @element.visible?
+    element.visible?
   end
 end
 
