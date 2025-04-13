@@ -151,9 +151,3 @@ Style/ImplicitRuntimeError:
 Style/MethodCallWithArgsParentheses:
   Exclude:
     - 'spec/spec_helper.rb'
-
-# Offense count: 1
-# This cop supports unsafe autocorrection (--autocorrect-all).
-Style/RequireOrder:
-  Exclude:
-    - 'lib/feed_pub.rb'
