@@ -3,8 +3,11 @@
 require "capybara"
 
 class TestDriver
+  attr_accessor :current_url, :body
+
   def visit(url)
-    @body = Capybara.string(fixture(url))
+    self.current_url = url
+    self.body = Capybara.string(fixture(url))
   end
 
   def invalid_element_errors
@@ -12,7 +15,7 @@ class TestDriver
   end
 
   def find_css(selector, _options)
-    @body.find_css(selector).map do |element|
+    body.find_css(selector).map do |element|
       TestNode.new(element)
     end
   end
@@ -38,6 +41,8 @@ class TestNode
   def initialize(element)
     @element = Capybara::Node::Simple.new(element)
   end
+
+  def click(*_args); end
 
   def find_css(selector)
     @element.find_css(selector).map do |element|
