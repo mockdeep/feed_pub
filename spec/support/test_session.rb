@@ -7,16 +7,8 @@ class TestSession
     self.url = url
   end
 
-  def has_css?(_selector)
-    false
-  end
-
   def has_link?(_text)
     false
-  end
-
-  def current_url
-    url
   end
 
   def find(_selector); end
