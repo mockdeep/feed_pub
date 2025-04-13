@@ -20,8 +20,10 @@ class TestDriver
     end
   end
 
-  def find_xpath(_selector)
-    []
+  def find_xpath(selector)
+    body.find_xpath(selector).map do |element|
+      TestNode.new(element)
+    end
   end
 
   def wait?
