@@ -2,6 +2,7 @@
 
 require_relative "support/coverage"
 require_relative "support/output"
+require_relative "support/test_driver"
 require_relative "support/test_session"
 require_relative "support/webmock"
 
@@ -17,4 +18,6 @@ RSpec.configure do |config|
   config.expect_with :rspec do |c|
     c.syntax = :expect
   end
+
+  config.filter_run_when_matching(:focus)
 end

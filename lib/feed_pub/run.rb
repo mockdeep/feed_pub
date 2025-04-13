@@ -5,8 +5,14 @@ module FeedPub::Run
     PROCESSED_URLS = "downloaded_images.txt"
     DEFAULT_MAX_PAGES = 100
 
+    attr_writer :driver
+
+    def driver
+      @driver ||= :selenium
+    end
+
     def call(url, output:, filepath:, max_pages: DEFAULT_MAX_PAGES)
-      session = Capybara::Session.new(:selenium)
+      session = Capybara::Session.new(driver)
       session.visit(url)
       image_selector = infer_image_selector(session, output:)
       next_selector = FeedPub::InferNextSelector.call(session, output:)
