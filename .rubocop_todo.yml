@@ -143,11 +143,3 @@ Style/ImplicitRuntimeError:
   Exclude:
     - 'lib/feed_pub/infer_next_selector.rb'
     - 'lib/feed_pub/run.rb'
-
-# Offense count: 1
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: IgnoreMacros, AllowedMethods, AllowedPatterns, IncludedMacros, AllowParenthesesInMultilineCall, AllowParenthesesInChaining, AllowParenthesesInCamelCaseMethod, AllowParenthesesInStringInterpolation, EnforcedStyle.
-# SupportedStyles: require_parentheses, omit_parentheses
-Style/MethodCallWithArgsParentheses:
-  Exclude:
-    - 'spec/spec_helper.rb'
