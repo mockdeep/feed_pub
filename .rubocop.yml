@@ -11,6 +11,7 @@ AllCops:
 
 Naming/VariableNumber: { EnforcedStyle: snake_case }
 Style/ClassAndModuleChildren: { EnforcedStyle: compact }
+Style/ClassMethodsDefinitions: { EnforcedStyle: self_class }
 
 Style/MethodCallWithArgsParentheses:
   AllowedMethods:

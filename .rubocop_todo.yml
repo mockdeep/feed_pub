@@ -6,22 +6,6 @@
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again.
 
-# Offense count: 1
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: Severity, Include.
-# Include: **/*.gemspec
-Gemspec/RequireMFA:
-  Exclude:
-    - 'feed_pub.gemspec'
-
-# Offense count: 1
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: empty_lines, empty_lines_except_namespace, empty_lines_special, no_empty_lines
-Layout/EmptyLinesAroundModuleBody:
-  Exclude:
-    - 'lib/feed_pub/infer_next_selector.rb'
-
 # Offense count: 15
 # This cop supports safe autocorrection (--autocorrect).
 # Configuration parameters: Max, AllowHeredoc, AllowURI, URISchemes, IgnoreCopDirectives, AllowedPatterns, SplitStrings.
@@ -32,15 +16,6 @@ Layout/LineLength:
     - 'lib/feed_pub/infer_next_selector.rb'
     - 'spec/feed_pub/infer_next_selector_spec.rb'
     - 'spec/feed_pub/run_spec.rb'
-
-# Offense count: 1
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle.
-# SupportedTypes: block, case, class, if, kwbegin, module
-# SupportedStyles: same_line, new_line
-Layout/MultilineAssignmentLayout:
-  Exclude:
-    - 'feed_pub.gemspec'
 
 # Offense count: 4
 # Configuration parameters: AllowedMethods, AllowedPatterns, CountRepeatedAttributes, Max.
@@ -88,20 +63,6 @@ RSpec/StubbedMock:
   Exclude:
     - 'spec/feed_pub/infer_next_selector_spec.rb'
     - 'spec/feed_pub/run_spec.rb'
-
-# Offense count: 1
-# This cop supports unsafe autocorrection (--autocorrect-all).
-Style/ArrayFirstLast:
-  Exclude:
-    - 'exe/feed_pub'
-
-# Offense count: 1
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: def_self, self_class
-Style/ClassMethodsDefinitions:
-  Exclude:
-    - 'lib/feed_pub/infer_next_selector.rb'
 
 # Offense count: 5
 # Configuration parameters: AllowedConstants.
