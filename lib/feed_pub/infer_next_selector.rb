@@ -6,9 +6,7 @@ module FeedPub::InferNextSelector
 
     def call(session)
       output.puts "inferring next selector"
-      if session.has_link?("Next")
-        return LinkSelector.new("Next")
-      end
+      return LinkSelector.new("Next") if session.has_link?("Next")
 
       # find all elements with "next" in id or class or alt
       # return the selector from the first one
