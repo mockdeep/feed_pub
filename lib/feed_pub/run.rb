@@ -11,7 +11,7 @@ module FeedPub::Run
       @driver ||= :selenium
     end
 
-    def call(url, output:, filepath:, max_pages: DEFAULT_MAX_PAGES)
+    def call(url, output:, file_path:, max_pages: DEFAULT_MAX_PAGES)
       Capybara.predicates_wait = false
       session = Capybara::Session.new(driver)
       session.visit(url)
@@ -26,7 +26,7 @@ module FeedPub::Run
       sequence = "00000"
       session.all(image_selector).each do |img|
         sequence =
-          download_image(img, referer: url, sequence:, output:, filepath:)
+          download_image(img, referer: url, sequence:, output:, file_path:)
       end
 
       while next_selector.matches?(session) && Integer(sequence, 10) < max_pages
@@ -44,13 +44,13 @@ module FeedPub::Run
 
         session.all(image_selector).each do |img|
           sequence =
-            download_image(img, referer: url, sequence:, output:, filepath:)
+            download_image(img, referer: url, sequence:, output:, file_path:)
         end
       end
 
       # merge all images (png, jpg, etc.) into a single PDF
-      image_list = Magick::ImageList.new(*Dir.glob(File.join(filepath, "*")))
-      image_list.write(File.join(filepath, "comic.pdf"))
+      image_list = Magick::ImageList.new(*Dir.glob(File.join(file_path, "*")))
+      image_list.write(File.join(file_path, "comic.pdf"))
       # `convert comic.pdf -fill white -colorize 20% comic_light.pdf`
       # `convert -brightness-contrast 20x20 comic.pdf comic_bright.pdf`
       # `pdftoppm -png -gray some.pdf some`
@@ -89,7 +89,7 @@ module FeedPub::Run
       final_selector
     end
 
-    def download_image(img, referer:, sequence:, output:, filepath:)
+    def download_image(img, referer:, sequence:, output:, file_path:)
       image_url = img["data-url"] || img["src"]
       if processed_urls.include?(image_url)
         output.puts "already downloaded: #{image_url}"
@@ -99,7 +99,7 @@ module FeedPub::Run
       output.puts "downloading: #{image_url.inspect}"
 
       filename = "#{sequence}_#{File.basename(image_url)}"
-      image_path = File.join(filepath, filename)
+      image_path = File.join(file_path, filename)
 
       # ensure multiple images don't have the same name
       # if they do, we'll need to adjust our algorithm
@@ -107,7 +107,7 @@ module FeedPub::Run
 
       response = HTTP.follow.get(image_url, headers: { Referer: referer })
 
-      image_path = File.join(filepath, filename)
+      image_path = File.join(file_path, filename)
       File.write(image_path, response.body.to_s)
       processed_urls << image_url
       sequence.next
