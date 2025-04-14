@@ -75,5 +75,3 @@ class TestNode
 end
 
 Capybara.register_driver(:test) { TestDriver.new }
-
-RSpec.configure { |config| config.before { FeedPub::Run.driver = :test } }
