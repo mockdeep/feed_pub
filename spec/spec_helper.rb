@@ -2,7 +2,6 @@
 
 require_relative "support/coverage"
 require_relative "support/file_helpers"
-require_relative "support/output"
 require_relative "support/test_driver"
 require_relative "support/webmock"
 
