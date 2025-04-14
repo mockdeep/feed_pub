@@ -16,7 +16,7 @@ module FeedPub::Run
       end
 
       image_selector = infer_image_selector(session)
-      next_selector = FeedPub::InferNextSelector.call(session)
+      next_selector = FeedPub::NextSelector::Infer.call(session)
       self.processed_urls = []
 
       # need to number the images in case they don't have sequenced names
