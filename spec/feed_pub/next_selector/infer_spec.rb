@@ -2,13 +2,13 @@
 
 RSpec.describe FeedPub::NextSelector::Infer do
   it "returns a link selector when a link with 'Next' is found" do
-    session = TestNode.new("<a href='/foo'>Next</a>")
+    session = TestNode.wrap("<a href='/foo'>Next</a>")
 
     expect(described_class.call(session)).to be_a(FeedPub::NextSelector::Link)
   end
 
   it "returns an alt selector when an element with 'next' in alt is found" do
-    session = TestNode.new("<button alt='next'></button>")
+    session = TestNode.wrap("<button alt='next'></button>")
 
     selector = described_class.call(session)
 
@@ -16,7 +16,7 @@ RSpec.describe FeedPub::NextSelector::Infer do
   end
 
   it "returns a class selector when an element with 'next' in class is found" do
-    session = TestNode.new("<button class='next'></button>")
+    session = TestNode.wrap("<button class='next'></button>")
 
     selector = described_class.call(session)
 
