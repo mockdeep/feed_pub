@@ -2,7 +2,9 @@
 
 module FeedPub::InferNextSelector
   class << self
-    def call(session, output:)
+    include FeedPub::Helpers
+
+    def call(session)
       output.puts "inferring next selector"
       if session.has_link?("Next")
         return LinkSelector.new("Next")

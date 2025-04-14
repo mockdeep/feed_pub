@@ -2,6 +2,8 @@
 
 module FeedPub::Run
   class << self
+    include FeedPub::Helpers
+
     DEFAULT_MAX_PAGES = 100
 
     attr_accessor :processed_urls
@@ -11,22 +13,21 @@ module FeedPub::Run
       @driver ||= :selenium
     end
 
-    def call(url, output:, file_path:, max_pages: DEFAULT_MAX_PAGES)
+    def call(url, file_path:, max_pages: DEFAULT_MAX_PAGES)
       Capybara.predicates_wait = false
       session = Capybara::Session.new(driver)
       session.visit(url)
 
       raise "No images on page" unless session.has_css?("img", wait: 5)
 
-      image_selector = infer_image_selector(session, output:)
-      next_selector = FeedPub::InferNextSelector.call(session, output:)
+      image_selector = infer_image_selector(session)
+      next_selector = FeedPub::InferNextSelector.call(session)
       self.processed_urls = []
 
       # need to number the images in case they don't have sequenced names
       sequence = "00000"
       session.all(image_selector).each do |img|
-        sequence =
-          download_image(img, referer: url, sequence:, output:, file_path:)
+        sequence = download_image(img, referer: url, sequence:, file_path:)
       end
 
       while next_selector.matches?(session) && Integer(sequence, 10) < max_pages
@@ -43,8 +44,7 @@ module FeedPub::Run
         end
 
         session.all(image_selector).each do |img|
-          sequence =
-            download_image(img, referer: url, sequence:, output:, file_path:)
+          sequence = download_image(img, referer: url, sequence:, file_path:)
         end
       end
 
@@ -59,7 +59,7 @@ module FeedPub::Run
 
     private
 
-    def infer_image_selector(session, output:)
+    def infer_image_selector(session)
       output.puts "inferring image selector"
       # find all elements on the page with "comic" in id or class
       # then find the ones with no children matching the same criteria
@@ -89,7 +89,7 @@ module FeedPub::Run
       final_selector
     end
 
-    def download_image(img, referer:, sequence:, output:, file_path:)
+    def download_image(img, referer:, sequence:, file_path:)
       image_url = img["data-url"] || img["src"]
       if processed_urls.include?(image_url)
         output.puts "already downloaded: #{image_url}"

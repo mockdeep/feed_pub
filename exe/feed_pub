@@ -3,4 +3,4 @@
 
 require_relative "../lib/feed_pub"
 
-FeedPub::Run.call(ARGV.first, output: $stdout, file_path: File.expand_path("."))
+FeedPub::Run.call(ARGV.first, file_path: File.expand_path("."))
