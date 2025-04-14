@@ -26,8 +26,4 @@ module FileHelpers
   end
 end
 
-RSpec.configure do |config|
-  config.after do
-    FileUtils.rm_rf(tempfiles)
-  end
-end
+RSpec.configure { |config| config.after { FileUtils.rm_rf(tempfiles) } }

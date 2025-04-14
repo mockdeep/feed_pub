@@ -15,15 +15,11 @@ class TestDriver
   end
 
   def find_css(selector, _options)
-    body.find_css(selector).map do |element|
-      TestNode.new(element)
-    end
+    body.find_css(selector).map { |element| TestNode.new(element) }
   end
 
   def find_xpath(selector)
-    body.find_xpath(selector).map do |element|
-      TestNode.new(element)
-    end
+    body.find_xpath(selector).map { |element| TestNode.new(element) }
   end
 
   def wait?
@@ -54,15 +50,11 @@ class TestNode
   def click(*_args); end
 
   def find_css(selector)
-    element.find_css(selector).map do |element|
-      TestNode.new(element)
-    end
+    element.find_css(selector).map { |element| TestNode.new(element) }
   end
 
   def all(selector)
-    element.all(selector).map do |element|
-      TestNode.new(element)
-    end
+    element.all(selector).map { |element| TestNode.new(element) }
   end
 
   def has_link?(text, **_options)
@@ -82,10 +74,6 @@ class TestNode
   end
 end
 
-Capybara.register_driver(:test) do
-  TestDriver.new
-end
+Capybara.register_driver(:test) { TestDriver.new }
 
-RSpec.configure do |config|
-  config.before { FeedPub::Run.driver = :test }
-end
+RSpec.configure { |config| config.before { FeedPub::Run.driver = :test } }

@@ -9,6 +9,7 @@ AllCops:
   DefaultFormatter: fuubar
   TargetRubyVersion: 3.4
 
+Layout/RedundantLineBreak: { InspectBlocks: true }
 Naming/VariableNumber: { EnforcedStyle: snake_case }
 Style/ClassAndModuleChildren: { EnforcedStyle: compact }
 Style/ClassMethodsDefinitions: { EnforcedStyle: self_class }
