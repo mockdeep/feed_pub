@@ -21,7 +21,7 @@ RSpec.describe FeedPub::Run do
 
     described_class.call("one_image")
 
-    expect(tempfiles).to eq(["comic.pdf", "images"])
+    expect(temp_files).to eq(["comic.pdf", "images"])
   end
 
   it "clicks the next link and downloads images from each page" do
