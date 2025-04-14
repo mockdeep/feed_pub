@@ -6,4 +6,9 @@ module FeedPub::Helpers
   def output
     FeedPub::Configuration.output
   end
+
+  # return the configured file path
+  def file_path
+    FeedPub::Configuration.file_path
+  end
 end
