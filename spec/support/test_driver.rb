@@ -3,11 +3,11 @@
 require "capybara"
 
 class TestDriver
-  attr_accessor :current_url, :body
+  attr_accessor :current_url, :element
 
   def visit(url)
     self.current_url = url
-    self.body = Capybara.string(fixture(url))
+    self.element = Capybara.string(fixture(url))
   end
 
   def invalid_element_errors
@@ -15,11 +15,11 @@ class TestDriver
   end
 
   def find_css(selector, _options)
-    body.find_css(selector).map { |element| TestNode.wrap(element) }
+    element.find_css(selector).map { |element| TestNode.wrap(element) }
   end
 
   def find_xpath(selector)
-    body.find_xpath(selector).map { |element| TestNode.wrap(element) }
+    element.find_xpath(selector).map { |element| TestNode.wrap(element) }
   end
 
   def wait?
