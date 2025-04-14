@@ -11,7 +11,9 @@ module FeedPub::Run
       session = Capybara::Session.new(driver)
       session.visit(url)
 
-      raise "No images on page" unless session.has_css?("img", wait: 5)
+      unless session.has_css?("img", wait: 5)
+        raise FeedPub::Error, "No images on page"
+      end
 
       image_selector = infer_image_selector(session)
       next_selector = FeedPub::InferNextSelector.call(session)
@@ -68,7 +70,7 @@ module FeedPub::Run
           candidate.all("img").map { |img| Integer(img["width"]) }.max
         end
 
-      raise "No image candidates found" unless element
+      raise FeedPub::Error, "No image candidates found" unless element
 
       final_selector =
         if element["id"].present?
@@ -96,7 +98,9 @@ module FeedPub::Run
 
       # ensure multiple images don't have the same name
       # if they do, we'll need to adjust our algorithm
-      raise "File already exists: #{filename}" if File.exist?(image_path)
+      if File.exist?(image_path)
+        raise FeedPub::Error, "File already exists: #{filename}"
+      end
 
       response = HTTP.follow.get(image_url, headers: { Referer: referer })
 

@@ -77,9 +77,3 @@ Style/DocumentationMethod:
 Style/IfUnlessModifier:
   Exclude:
     - 'lib/feed_pub/infer_next_selector.rb'
-
-# Offense count: 3
-Style/ImplicitRuntimeError:
-  Exclude:
-    - 'lib/feed_pub/infer_next_selector.rb'
-    - 'lib/feed_pub/run.rb'

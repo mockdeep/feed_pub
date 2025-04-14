@@ -15,7 +15,7 @@ module FeedPub::InferNextSelector
       selector = "[id*='next'], [class*='next'], [alt*='next']"
       element = session.all(selector).first
 
-      raise "No next candidates found" unless element
+      raise FeedPub::Error, "No next candidates found" unless element
 
       final_selector =
         if element["id"].present?
