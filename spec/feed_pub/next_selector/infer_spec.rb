@@ -12,7 +12,7 @@ RSpec.describe FeedPub::NextSelector::Infer do
 
     selector = described_class.call(session)
 
-    expect(selector.to_s).to eq("[alt='next']")
+    expect(selector.to_s).to eq("[alt*='next']")
   end
 
   it "returns a class selector when an element with 'next' in class is found" do
@@ -20,6 +20,6 @@ RSpec.describe FeedPub::NextSelector::Infer do
 
     selector = described_class.call(session)
 
-    expect(selector.to_s).to eq("[class='next']")
+    expect(selector.to_s).to eq("[class*='next']")
   end
 end
