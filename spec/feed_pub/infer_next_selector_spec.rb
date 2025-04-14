@@ -4,7 +4,8 @@ RSpec.describe FeedPub::InferNextSelector do
   it "returns a link selector when a link with 'Next' is found" do
     session = TestNode.new("<a href='/foo'>Next</a>")
 
-    expect(described_class.call(session)).to be_a(FeedPub::InferNextSelector::LinkSelector)
+    expect(described_class.call(session))
+      .to be_a(FeedPub::InferNextSelector::LinkSelector)
   end
 
   it "returns an alt selector when an element with 'next' in alt is found" do

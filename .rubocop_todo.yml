@@ -6,17 +6,6 @@
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again.
 
-# Offense count: 15
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: Max, AllowHeredoc, AllowURI, URISchemes, IgnoreCopDirectives, AllowedPatterns, SplitStrings.
-# URISchemes: http, https
-Layout/LineLength:
-  Exclude:
-    - 'feed_pub.gemspec'
-    - 'lib/feed_pub/infer_next_selector.rb'
-    - 'spec/feed_pub/infer_next_selector_spec.rb'
-    - 'spec/feed_pub/run_spec.rb'
-
 # Offense count: 4
 # Configuration parameters: AllowedMethods, AllowedPatterns, CountRepeatedAttributes, Max.
 Metrics/AbcSize:
