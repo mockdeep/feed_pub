@@ -20,12 +20,6 @@ Metrics/MethodLength:
     - 'lib/feed_pub/infer_next_selector.rb'
     - 'lib/feed_pub/run.rb'
 
-# Offense count: 6
-# Configuration parameters: Max, CountAsOne.
-RSpec/ExampleLength:
-  Exclude:
-    - 'spec/feed_pub/run_spec.rb'
-
 # Offense count: 22
 # Configuration parameters: EnforcedStyle.
 # SupportedStyles: allow, expect
@@ -39,19 +33,6 @@ RSpec/MessageExpectation:
 # SupportedStyles: have_received, receive
 RSpec/MessageSpies:
   EnforcedStyle: receive
-
-# Offense count: 6
-# Configuration parameters: Max.
-RSpec/MultipleExpectations:
-  Exclude:
-    - 'spec/feed_pub/infer_next_selector_spec.rb'
-    - 'spec/feed_pub/run_spec.rb'
-
-# Offense count: 3
-RSpec/StubbedMock:
-  Exclude:
-    - 'spec/feed_pub/infer_next_selector_spec.rb'
-    - 'spec/feed_pub/run_spec.rb'
 
 # Offense count: 5
 # Configuration parameters: AllowedConstants.
@@ -71,9 +52,3 @@ Style/DocumentationMethod:
     - 'test/**/*'
     - 'lib/feed_pub/infer_next_selector.rb'
     - 'lib/feed_pub/run.rb'
-
-# Offense count: 1
-# This cop supports safe autocorrection (--autocorrect).
-Style/IfUnlessModifier:
-  Exclude:
-    - 'lib/feed_pub/infer_next_selector.rb'
