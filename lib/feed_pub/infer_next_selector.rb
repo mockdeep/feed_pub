@@ -60,7 +60,11 @@ module FeedPub::InferNextSelector
     end
 
     def click(session)
-      session.visit(session.find_link(@text, visible: false, match: :first)[:href])
+      session.visit(link(session)[:href])
+    end
+
+    def link(session)
+      session.find_link(@text, visible: false, match: :first)
     end
   end
 end
