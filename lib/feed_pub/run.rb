@@ -15,7 +15,7 @@ module FeedPub::Run
         raise FeedPub::Error, "No images on page"
       end
 
-      image_selector = infer_image_selector(session)
+      image_selector = FeedPub::ImageSelector::Infer.call(session)
       next_selector = FeedPub::NextSelector::Infer.call(session)
       self.processed_urls = []
 
@@ -53,36 +53,6 @@ module FeedPub::Run
     end
 
     private
-
-    def infer_image_selector(session)
-      output.puts "inferring image selector"
-      # find all elements on the page with "comic" in id or class
-      # then find the ones with no children matching the same criteria
-      # then find the one with the biggest image
-      selector = "[id*='comic'], [class*='comic'], .viewer_img"
-      candidates =
-        session.all(selector).select do |element|
-          element.has_no_css?(selector) && element.has_css?("img")
-        end
-
-      element =
-        candidates.max_by do |candidate|
-          candidate.all("img").map { |img| Integer(img["width"]) }.max
-        end
-
-      raise FeedPub::Error, "No image candidates found" unless element
-
-      final_selector =
-        if element["id"].present?
-          "[id='#{element["id"]}'] img"
-        else
-          "[class='#{element["class"]}'] img"
-        end
-
-      output.puts "final image selector: '#{final_selector}'"
-
-      final_selector
-    end
 
     def download_image(img, referer:, sequence:)
       image_url = img["data-url"] || img["src"]
