@@ -9,6 +9,7 @@ require_relative "support/webmock"
 require_relative "../lib/feed_pub"
 
 RSpec.configure do |config|
+  config.include(FeedPub::Helpers)
   config.include(FileHelpers)
 
   # Enable flags like --only-failures and --next-failure

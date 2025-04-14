@@ -21,7 +21,7 @@ RSpec.describe FeedPub::Run do
 
     described_class.call("one_image")
 
-    expect(tempfile_names).to eq(["00000_foo.jpg", "comic.pdf"])
+    expect(tempfiles).to eq(["comic.pdf", "images"])
   end
 
   it "clicks the next link and downloads images from each page" do
@@ -30,7 +30,7 @@ RSpec.describe FeedPub::Run do
 
     described_class.call("next_link")
 
-    expect(tempfile_names).to eq(["00000_foo.jpg", "00001_bar.jpg", "comic.pdf"])
+    expect(image_files).to eq(["00000_foo.jpg", "00001_bar.jpg"])
   end
 
   it "does not download images when already downloaded" do
@@ -38,12 +38,12 @@ RSpec.describe FeedPub::Run do
 
     described_class.call("duplicate_image")
 
-    expect(tempfile_names).to eq(["00000_foo.jpg", "comic.pdf"])
+    expect(image_files).to eq(["00000_foo.jpg"])
   end
 
   it "raises an error when image file already exists" do
     stub_request(:get, "https://foo.jpg").to_return(body: sketch)
-    File.write(File.join(file_path, "00000_foo.jpg"), sketch)
+    File.write(File.join(images_path, "00000_foo.jpg"), sketch)
 
     expect { described_class.call("image_class") }
       .to raise_error("File already exists: 00000_foo.jpg")

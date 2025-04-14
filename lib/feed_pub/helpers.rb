@@ -12,6 +12,11 @@ module FeedPub::Helpers
     FeedPub::Configuration.file_path
   end
 
+  # create and return the path to the images directory
+  def images_path
+    FileUtils.mkdir_p(File.join(file_path, "images")).first
+  end
+
   # return the configured max pages
   def max_pages
     FeedPub::Configuration.max_pages

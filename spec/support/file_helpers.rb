@@ -9,16 +9,12 @@ module FileHelpers
     File.join(root_path, "spec", "fixtures")
   end
 
-  def file_path
-    FeedPub::Configuration.file_path
-  end
-
   def tempfiles
-    Dir.glob(File.join(file_path, "*"))
+    Dir.glob("*", base: file_path)
   end
 
-  def tempfile_names
-    tempfiles.map { |f| File.basename(f) }
+  def image_files
+    Dir.glob("*", base: images_path)
   end
 
   def sketch
