@@ -13,7 +13,7 @@ module FeedPub::Run
       @driver ||= :selenium
     end
 
-    def call(url, file_path:, max_pages: DEFAULT_MAX_PAGES)
+    def call(url, max_pages: DEFAULT_MAX_PAGES)
       Capybara.predicates_wait = false
       session = Capybara::Session.new(driver)
       session.visit(url)
@@ -27,7 +27,7 @@ module FeedPub::Run
       # need to number the images in case they don't have sequenced names
       sequence = "00000"
       session.all(image_selector).each do |img|
-        sequence = download_image(img, referer: url, sequence:, file_path:)
+        sequence = download_image(img, referer: url, sequence:)
       end
 
       while next_selector.matches?(session) && Integer(sequence, 10) < max_pages
@@ -44,7 +44,7 @@ module FeedPub::Run
         end
 
         session.all(image_selector).each do |img|
-          sequence = download_image(img, referer: url, sequence:, file_path:)
+          sequence = download_image(img, referer: url, sequence:)
         end
       end
 
@@ -89,7 +89,7 @@ module FeedPub::Run
       final_selector
     end
 
-    def download_image(img, referer:, sequence:, file_path:)
+    def download_image(img, referer:, sequence:)
       image_url = img["data-url"] || img["src"]
       if processed_urls.include?(image_url)
         output.puts "already downloaded: #{image_url}"
@@ -107,7 +107,6 @@ module FeedPub::Run
 
       response = HTTP.follow.get(image_url, headers: { Referer: referer })
 
-      image_path = File.join(file_path, filename)
       File.write(image_path, response.body.to_s)
       processed_urls << image_url
       sequence.next

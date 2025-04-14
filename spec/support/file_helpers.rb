@@ -10,7 +10,7 @@ module FileHelpers
   end
 
   def file_path
-    File.join(root_path, "tmp")
+    FeedPub::Configuration.file_path
   end
 
   def tempfiles
@@ -25,5 +25,3 @@ module FileHelpers
     File.read(File.join(fixture_path, "sketch.jpg"))
   end
 end
-
-RSpec.configure { |config| config.after { FileUtils.rm_rf(tempfiles) } }
