@@ -9,7 +9,7 @@ module FileHelpers
     File.join(root_path, "spec", "fixtures")
   end
 
-  def tempfiles
+  def temp_files
     Dir.glob("*", base: file_path)
   end
 
