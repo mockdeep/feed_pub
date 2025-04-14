@@ -17,7 +17,7 @@ module FeedPub::Configuration
 
     # return the max pages, 50 by default
     def max_pages
-      @max_pages ||= 50
+      @max_pages ||= 10
     end
 
     # return the output stream, $stdout by default

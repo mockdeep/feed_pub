@@ -42,7 +42,7 @@ module FeedPub::Run
       end
 
       # merge all images (png, jpg, etc.) into a single PDF
-      image_list = Magick::ImageList.new(*Dir.glob(File.join(file_path, "*")))
+      image_list = Magick::ImageList.new(*Dir.glob(File.join(images_path, "*")))
       image_list.write(File.join(file_path, "comic.pdf"))
       # `convert comic.pdf -fill white -colorize 20% comic_light.pdf`
       # `convert -brightness-contrast 20x20 comic.pdf comic_bright.pdf`
@@ -92,7 +92,7 @@ module FeedPub::Run
       output.puts "downloading: #{image_url.inspect}"
 
       filename = "#{sequence}_#{File.basename(image_url)}"
-      image_path = File.join(file_path, filename)
+      image_path = File.join(images_path, filename)
 
       # ensure multiple images don't have the same name
       # if they do, we'll need to adjust our algorithm
