@@ -2,6 +2,11 @@
 
 # helper methods for accessing configuration
 module FeedPub::Helpers
+  # return the configured Capybara driver
+  def driver
+    FeedPub::Configuration.driver
+  end
+
   # return the configured file path
   def file_path
     FeedPub::Configuration.file_path

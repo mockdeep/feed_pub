@@ -3,7 +3,12 @@
 # helper methods for accessing configuration
 module FeedPub::Configuration
   class << self
-    attr_writer :file_path, :max_pages, :output
+    attr_writer :driver, :file_path, :max_pages, :output
+
+    # return the driver, :selenium by default
+    def driver
+      @driver ||= :selenium
+    end
 
     # return the file path, Dir.pwd by default
     def file_path

@@ -5,11 +5,6 @@ module FeedPub::Run
     include FeedPub::Helpers
 
     attr_accessor :processed_urls
-    attr_writer :driver
-
-    def driver
-      @driver ||= :selenium
-    end
 
     def call(url)
       Capybara.predicates_wait = false

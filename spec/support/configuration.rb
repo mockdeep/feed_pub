@@ -1,7 +1,10 @@
 # frozen_string_literal: true
 
 RSpec.configure do |config|
-  config.before { FeedPub::Configuration.output = StringIO.new }
+  config.before do
+    FeedPub::Configuration.driver = :test
+    FeedPub::Configuration.output = StringIO.new
+  end
 
   config.around do |example|
     Dir.mktmpdir do |dir|
