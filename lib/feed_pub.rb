@@ -9,6 +9,7 @@ module FeedPub
 end
 
 require_relative "feed_pub/configuration"
+require_relative "feed_pub/error"
 require_relative "feed_pub/helpers"
 require_relative "feed_pub/infer_next_selector"
 require_relative "feed_pub/run"
