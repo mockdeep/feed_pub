@@ -4,8 +4,6 @@ module FeedPub::Run
   class << self
     include FeedPub::Helpers
 
-    DEFAULT_MAX_PAGES = 100
-
     attr_accessor :processed_urls
     attr_writer :driver
 
@@ -13,7 +11,7 @@ module FeedPub::Run
       @driver ||= :selenium
     end
 
-    def call(url, max_pages: DEFAULT_MAX_PAGES)
+    def call(url)
       Capybara.predicates_wait = false
       session = Capybara::Session.new(driver)
       session.visit(url)

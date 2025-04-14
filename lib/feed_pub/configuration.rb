@@ -3,16 +3,21 @@
 # helper methods for accessing configuration
 module FeedPub::Configuration
   class << self
-    attr_writer :file_path, :output
-
-    # return the output stream, $stdout by default
-    def output
-      @output ||= $stdout
-    end
+    attr_writer :file_path, :max_pages, :output
 
     # return the file path, Dir.pwd by default
     def file_path
       @file_path ||= Dir.pwd
+    end
+
+    # return the max pages, 50 by default
+    def max_pages
+      @max_pages ||= 50
+    end
+
+    # return the output stream, $stdout by default
+    def output
+      @output ||= $stdout
     end
   end
 end
