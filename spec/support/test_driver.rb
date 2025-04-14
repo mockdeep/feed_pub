@@ -15,11 +15,11 @@ class TestDriver
   end
 
   def find_css(selector, _options)
-    body.find_css(selector).map { |element| TestNode.new(element) }
+    body.find_css(selector).map { |element| TestNode.wrap(element) }
   end
 
   def find_xpath(selector)
-    body.find_xpath(selector).map { |element| TestNode.new(element) }
+    body.find_xpath(selector).map { |element| TestNode.wrap(element) }
   end
 
   def wait?
@@ -38,19 +38,20 @@ end
 class TestNode
   attr_accessor :element
 
+  class << self
+    def wrap(element)
+      new(Capybara::Node::Simple.new(element))
+    end
+  end
+
   def initialize(element)
-    self.element =
-      if element.is_a?(Capybara::Node::Simple)
-        element
-      else
-        Capybara::Node::Simple.new(element)
-      end
+    self.element = element
   end
 
   def click(*_args); end
 
   def find_css(selector)
-    element.find_css(selector).map { |element| TestNode.new(element) }
+    element.find_css(selector).map { |element| TestNode.wrap(element) }
   end
 
   def all(selector)
