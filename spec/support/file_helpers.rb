@@ -9,12 +9,12 @@ module FileHelpers
     File.join(root_path, "spec", "fixtures")
   end
 
-  def filepath
+  def file_path
     File.join(root_path, "tmp")
   end
 
   def tempfiles
-    Dir.glob(File.join(filepath, "*"))
+    Dir.glob(File.join(file_path, "*"))
   end
 
   def tempfile_names
