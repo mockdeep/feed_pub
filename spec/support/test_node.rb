@@ -53,6 +53,10 @@ class TestNode
     []
   end
 
+  def tag_name
+    element.tag_name
+  end
+
   def visible?
     element.visible?
   end

@@ -21,7 +21,7 @@ module FeedPub::Run
 
       # need to number the images in case they don't have sequenced names
       sequence = "00000"
-      session.all(image_selector).each do |img|
+      image_selector.all(session).each do |img|
         sequence = download_image(img, referer: url, sequence:)
       end
 
@@ -38,7 +38,7 @@ module FeedPub::Run
           break
         end
 
-        session.all(image_selector).each do |img|
+        image_selector.all(session).each do |img|
           sequence = download_image(img, referer: url, sequence:)
         end
       end
