@@ -3,9 +3,9 @@
 module FeedPub::NextSelector::Infer
   SELECTORS = [
     FeedPub::NextSelector::Link.new("Next"),
-    FeedPub::NextSelector::Attribute.new("[id*='next']"),
-    FeedPub::NextSelector::Attribute.new("[class*='next']"),
-    FeedPub::NextSelector::Attribute.new("[alt*='next']"),
+    FeedPub::NextSelector::Attribute.new("id", "next"),
+    FeedPub::NextSelector::Attribute.new("class", "next"),
+    FeedPub::NextSelector::Attribute.new("alt", "next"),
   ].freeze
 
   class << self

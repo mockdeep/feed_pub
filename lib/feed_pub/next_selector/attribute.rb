@@ -1,19 +1,26 @@
 # frozen_string_literal: true
 
 class FeedPub::NextSelector::Attribute
-  def initialize(selector)
-    @selector = selector
+  attr_accessor :attribute, :term
+
+  def initialize(attribute, term)
+    self.attribute = attribute
+    self.term = term
   end
 
   def matches?(session)
-    session.has_css?(@selector)
+    session.has_css?(value)
   end
 
   def click(session)
-    session.find(@selector).click
+    session.find(value).click
   end
 
   def to_s
-    @selector
+    value
+  end
+
+  def value
+    "[#{@attribute}*='#{@term}']"
   end
 end
