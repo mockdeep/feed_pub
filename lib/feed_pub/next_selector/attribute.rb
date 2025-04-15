@@ -21,6 +21,6 @@ class FeedPub::NextSelector::Attribute
   end
 
   def value
-    "[#{@attribute}*='#{@term}']"
+    "[#{attribute}*='#{term}']"
   end
 end

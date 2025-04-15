@@ -1,12 +1,14 @@
 # frozen_string_literal: true
 
 class FeedPub::NextSelector::Link
+  attr_accessor :text
+
   def initialize(text)
-    @text = text
+    self.text = text
   end
 
   def matches?(session)
-    session.has_link?(@text, visible: false)
+    session.has_link?(text, visible: false)
   end
 
   def click(session)
@@ -14,6 +16,6 @@ class FeedPub::NextSelector::Link
   end
 
   def link(session)
-    session.find_link(@text, visible: false, match: :first)
+    session.find_link(text, visible: false, match: :first)
   end
 end
