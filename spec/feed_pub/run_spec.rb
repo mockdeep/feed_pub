@@ -48,4 +48,10 @@ RSpec.describe FeedPub::Run do
     expect { described_class.call("image_class") }
       .to raise_error("File already exists: 00000_foo.jpg")
   end
+
+  it "does not raise an error when image url is invalid" do
+    stub_request(:get, "https://bar.jpg").to_return(body: sketch)
+
+    expect { described_class.call("invalid_image_url") }.not_to raise_error
+  end
 end
