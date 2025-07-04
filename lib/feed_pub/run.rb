@@ -32,7 +32,7 @@ module FeedPub::Run
 
         begin
           session.assert_no_current_path(current_url)
-          output.puts "new current url: #{current_url}"
+          output.puts "new current url: #{session.current_url}"
         rescue Capybara::ExpectationNotMet
           output.puts "URL did not change, stopping"
           break
@@ -61,7 +61,12 @@ module FeedPub::Run
         return sequence
       end
 
-      output.puts "downloading: #{image_url.inspect}"
+      if image_url.end_with?("/")
+        output.puts "invalid image url, skipping: #{image_url}"
+        return sequence
+      end
+
+      output.puts "downloading #{sequence}/#{max_pages}: #{image_url.inspect}"
 
       filename = "#{sequence}_#{File.basename(image_url)}"
       image_path = File.join(images_path, filename)
