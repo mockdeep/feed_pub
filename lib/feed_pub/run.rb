@@ -4,6 +4,8 @@ module FeedPub::Run
   class << self
     include FeedPub::Helpers
 
+    EXCLUDED_IMAGE_EXTENSIONS = ["", ".gif"].freeze
+
     attr_accessor :processed_urls
 
     def call(url)
@@ -56,13 +58,14 @@ module FeedPub::Run
 
     def download_image(img, referer:, sequence:)
       image_url = img["data-url"] || img["src"]
-      if processed_urls.include?(image_url)
-        output.puts "already downloaded: #{image_url}"
+
+      if EXCLUDED_IMAGE_EXTENSIONS.include?(File.extname(image_url).downcase)
+        output.puts "skipping excluded extension: #{image_url.inspect}"
         return sequence
       end
 
-      if image_url.end_with?("/")
-        output.puts "invalid image url, skipping: #{image_url}"
+      if processed_urls.include?(image_url)
+        output.puts "already downloaded: #{image_url}"
         return sequence
       end
 
