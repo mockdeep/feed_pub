@@ -10,7 +10,7 @@ class FeedPub::ImageSelector::Attribute
 
   # return all elements that match the selector
   def all(session)
-    session.all(value)
+    session.all(value, visible: false)
   end
 
   # return whether the selector matches the element and store the term

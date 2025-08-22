@@ -21,6 +21,10 @@ class TestNode
 
   def click(*_args); end
 
+  def find(selector, **)
+    TestNode.new(element.find(selector, **))
+  end
+
   def find_css(selector, _options)
     element.find_css(selector).map { |element| TestNode.wrap(element) }
   end
@@ -41,8 +45,8 @@ class TestNode
     File.join("spec", "fixtures")
   end
 
-  def has_css?(selector)
-    element.has_css?(selector)
+  def has_css?(selector, **)
+    element.has_css?(selector, **)
   end
 
   def has_link?(text, **_options)

@@ -5,6 +5,7 @@ module FeedPub::NextSelector::Infer
     FeedPub::NextSelector::Link.new("Next"),
     FeedPub::NextSelector::Link.new("NEXT"),
     FeedPub::NextSelector::Link.new("›"),
+    FeedPub::NextSelector::IconLink.new(".fa-chevron-right"),
     FeedPub::NextSelector::Attribute.new("rel", "next"),
     FeedPub::NextSelector::Attribute.new("id", "next"),
     FeedPub::NextSelector::Attribute.new("class", "next"),
