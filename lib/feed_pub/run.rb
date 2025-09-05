@@ -11,7 +11,7 @@ module FeedPub::Run
     def call(url)
       Capybara.predicates_wait = false
       session = Capybara::Session.new(driver)
-      session.visit(url)
+      with_retry { session.visit(url) }
 
       unless session.has_css?("img", wait: 5)
         raise FeedPub::Error, "No images on page"
@@ -40,8 +40,10 @@ module FeedPub::Run
           break
         end
 
-        image_selector.all(session).each do |img|
-          sequence = download_image(img, referer: url, sequence:)
+        with_retry do
+          image_selector.all(session).each do |img|
+            sequence = download_image(img, referer: url, sequence:)
+          end
         end
       end
 
