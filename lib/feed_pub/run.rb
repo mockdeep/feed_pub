@@ -84,6 +84,15 @@ module FeedPub::Run
 
       response = HTTP.follow.get(image_url, headers: { Referer: referer })
 
+      if response.status == 404
+        output.puts "skipping 404: #{image_url.inspect}"
+        return sequence
+      elsif response.status != 200
+        raise FeedPub::Error,
+              "Failed to download image: #{image_url.inspect} " \
+              "(status: #{response.status})"
+      end
+
       File.write(image_path, response.body.to_s)
       processed_urls << image_url
       sequence.next

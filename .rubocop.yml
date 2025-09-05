@@ -12,11 +12,15 @@ AllCops:
 Layout/LineLength: { Max: 80 }
 Layout/RedundantLineBreak: { InspectBlocks: true }
 Naming/VariableNumber: { EnforcedStyle: snake_case }
+RSpec/MessageExpectation:
+  EnforcedStyle: expect
+  Exclude: [spec/support/matchers/invoke_matcher.rb]
 Style/ClassAndModuleChildren: { EnforcedStyle: compact }
 Style/ClassMethodsDefinitions: { EnforcedStyle: self_class }
 
 Style/MethodCallWithArgsParentheses:
   AllowedMethods:
+    - and
     - describe
     - not_to
     - puts
