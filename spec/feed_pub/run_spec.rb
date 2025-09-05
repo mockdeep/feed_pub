@@ -54,4 +54,22 @@ RSpec.describe FeedPub::Run do
 
     expect { described_class.call("invalid_image_url") }.not_to raise_error
   end
+
+  it "skips when response is a 404" do
+    stub_request(:get, "https://foo.jpg").to_return(body: sketch)
+    stub_request(:get, "https://bar.jpg").to_return(status: 404)
+
+    described_class.call("next_link")
+
+    expect(image_files).to eq(["00000_foo.jpg"])
+  end
+
+  it "raises an error when response is not 200 or 404" do
+    stub_request(:get, "https://foo.jpg").to_return(body: sketch)
+    stub_request(:get, "https://bar.jpg").to_return(status: 500)
+
+    expect { described_class.call("next_link") }
+      .to raise_error(%r{Failed to download image: "https://bar.jpg"})
+      .and invoke(:sleep).on(FeedPub::Retry).exactly(4).times
+  end
 end

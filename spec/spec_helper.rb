@@ -3,6 +3,7 @@
 require_relative "support/configuration"
 require_relative "support/coverage"
 require_relative "support/file_helpers"
+require_relative "support/matchers"
 require_relative "support/test_node"
 require_relative "support/webmock"
 
@@ -11,6 +12,7 @@ require_relative "../lib/feed_pub"
 RSpec.configure do |config|
   config.include(FeedPub::Helpers)
   config.include(FileHelpers)
+  config.include(Matchers)
 
   # Enable flags like --only-failures and --next-failure
   config.example_status_persistence_file_path = ".rspec_status"
