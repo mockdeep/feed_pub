@@ -26,4 +26,9 @@ module FeedPub::Helpers
   def output
     FeedPub::Configuration.output
   end
+
+  # call the block with retry logic
+  def with_retry(&)
+    FeedPub::Retry.call(&)
+  end
 end

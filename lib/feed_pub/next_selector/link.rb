@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class FeedPub::NextSelector::Link
+  include FeedPub::Helpers
+
   attr_accessor :text
 
   def initialize(text)
@@ -12,7 +14,7 @@ class FeedPub::NextSelector::Link
   end
 
   def click(session)
-    session.visit(link(session)[:href])
+    with_retry { session.visit(link(session)[:href]) }
   end
 
   def link(session)

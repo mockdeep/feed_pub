@@ -10,7 +10,8 @@ class FeedPub::NextSelector::IconLink
 
   # return true if a link with the icon exists
   def matches?(session)
-    session.has_css?("a:has(#{selector})", visible: false)
+    session.has_css?("a:has(#{selector})", visible: false) &&
+      link(session)[:href].present?
   end
 
   # click the link with the icon
