@@ -4,6 +4,7 @@ RSpec.configure do |config|
   config.before do
     FeedPub::Configuration.driver = :test
     FeedPub::Configuration.output = StringIO.new
+    FeedPub::Configuration.image_processors = []
   end
 
   config.around do |example|

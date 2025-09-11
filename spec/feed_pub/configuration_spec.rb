@@ -32,5 +32,36 @@ RSpec.describe FeedPub::Configuration do
       expect { described_class.parse(["http://example.com", "http://foo.com"]) }
         .to raise_error(SystemExit)
     end
+
+    it "adds :lighten to image_processors when --lighten is provided" do
+      described_class.parse(["--lighten", "http://example.com"])
+
+      expect(described_class.image_processors).to eq([:lighten])
+    end
+
+    it "adds :bw to image_processors when --bw is provided" do
+      described_class.parse(["--bw", "http://example.com"])
+
+      expect(described_class.image_processors).to eq([:bw])
+    end
+
+    it "adds :colorize to image_processors when --colorize is provided" do
+      described_class.parse(["--colorize", "http://example.com"])
+
+      expect(described_class.image_processors).to eq([:colorize])
+    end
+
+    it "adds :contrast to image_processors when --contrast is provided" do
+      described_class.parse(["--contrast", "http://example.com"])
+
+      expect(described_class.image_processors).to eq([:contrast])
+    end
+
+    it "adds multiple processors to image_processors" do
+      args = ["--lighten", "--bw", "--lighten", "http://example.com"]
+      described_class.parse(args)
+
+      expect(described_class.image_processors).to eq([:lighten, :bw, :lighten])
+    end
   end
 end
