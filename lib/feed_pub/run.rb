@@ -8,7 +8,8 @@ module FeedPub::Run
 
     attr_accessor :processed_urls
 
-    def call(url)
+    def call(args)
+      url = FeedPub::Configuration.parse(args)
       Capybara.predicates_wait = false
       session = Capybara::Session.new(driver)
       with_retry { session.visit(url) }
