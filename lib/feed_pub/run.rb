@@ -49,15 +49,18 @@ module FeedPub::Run
       end
 
       # merge all images (png, jpg, etc.) into a single PDF
-      image_list = Magick::ImageList.new(*Dir.glob(File.join(images_path, "*")))
-      image_list.write(File.join(file_path, "comic.pdf"))
-      # `convert comic.pdf -fill white -colorize 20% comic_light.pdf`
-      # `convert -brightness-contrast 20x20 comic.pdf comic_bright.pdf`
-      # `pdftoppm -png -gray some.pdf some`
+      processed_images.write(File.join(file_path, "comic.pdf"))
       output.puts "done"
     end
 
     private
+
+    def processed_images
+      image_list = Magick::ImageList.new(*Dir.glob(File.join(images_path, "*")))
+      processors = FeedPub::Configuration.image_processors
+
+      image_list.map { |image| FeedPub::ProcessImage.call(image, processors:) }
+    end
 
     def download_image(img, referer:, sequence:)
       image_url = img["data-url"] || img["src"]
