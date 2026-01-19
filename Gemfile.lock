@@ -82,11 +82,11 @@ GEM
       racc (~> 1.4)
     observer (0.1.2)
     parallel (1.27.0)
-    parser (3.3.10.0)
+    parser (3.3.10.1)
       ast (~> 2.4.1)
       racc
     pkg-config (1.6.5)
-    prism (1.7.0)
+    prism (1.8.0)
     public_suffix (7.0.2)
     racc (1.8.1)
     rack (3.2.4)
