@@ -32,6 +32,6 @@ Gem::Specification.new do |spec|
   spec.add_dependency("capybara", "~> 3.40")
   spec.add_dependency("http", "~> 6.0")
   spec.add_dependency("rmagick", "~> 7.0")
-  spec.add_dependency("selenium-webdriver", "~> 4.44.0")
+  spec.add_dependency("selenium-webdriver", "~> 4.45.0")
   spec.metadata["rubygems_mfa_required"] = "true"
 end
